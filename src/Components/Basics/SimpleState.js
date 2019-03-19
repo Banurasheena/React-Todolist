@@ -1,4 +1,6 @@
-import React, { Component } from "react";
+import React, { Component} from "react";
+import image3 from '../Layout/images/woman.jpeg'
+
 
 class SimpleState extends Component {
   constructor() {
@@ -49,6 +51,7 @@ class SimpleState extends Component {
         <h3>{this.age}</h3>
 
         <button onClick={this.changeStateHand}>hands button</button>
+        <img className="carousel-image" src={image3} alt="image3"/>
       </div>
     );
   }
