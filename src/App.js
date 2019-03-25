@@ -1,33 +1,81 @@
-import React, { Component, Fragment } from "react";
-import SimpleState from "./Components/Basics/SimpleState";
-import Navbar from "./Components/Layout/Navbar";
-import Slider from "./Components/Layout/Slider";
-import About from "./Components/Layout/about"
-import "bootstrap/dist/css/bootstrap.min.css";
-import 'bootstrap/dist/js/bootstrap.bundle'
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route}  from 'react-router-dom';
+import Header from './components/layout/Header';
+import Todos from './components/Todos';
+import AddTodo from './components/AddTodo';
+import About from './components/pages/About';
 import './App.css'
-import { BrowserRouter as Router } from 'react-router-dom';
-import Route from 'react-router-dom/Route';
-
+import uuid from 'uuid';
 
 class App extends Component {
-  render() {
-    return (
+  state = {
+    todos: [
+      {
+        id: uuid.v4(),
+        title: 'Take out the trash',
+        completed: false
+      },
+      {
+        id: uuid.v4(),
+        title: 'Take out the trash',
+        completed: true
+      },
+      {
+        id: uuid.v4(),
+        title: 'Take out the trash',
+        completed: false
+      }
+    ]
+  }
+  
+
+  // toggle complete
+  markComplete = (id) => {
+    this.setState({ todos: this.state.todos.map(todo => {            
+      if(todo.id ===id) {
+        todo.completed = !todo.completed
+      }
+      return todo;
+    }) });
+  }
+
+  // Delete Todo
+  delTodo = (id) => {
+  this.setState({ todos:[...this.state.todos.filter(todo => todo.id !==id) ]});
+  }
+
+  // add todo
+  addTodo = (title) =>{
+    const newTodo = {
+      id:uuid.v4(), title, completed:false
+    }
+    this.setState({todos:[...this.state.todos, newTodo ]});
+  }
+
+  render() { 
+    
+    return ( 
       <Router>
-        <div>
-          <Navbar />
-          <Slider />
-          <SimpleState />
-          <Route path="/about" exact render={
-            () => {
-              return(<h1>Welcome to Lacebut</h1>);
-            }
-          }/>
-          
-        </div>
+      <div className="App">
+      <div className = "container">
+      <Header />
+      <Route path="/" render={props => (
+        <React.Fragment>
+          <AddTodo addTodo={this.addTodo} />
+          <Todos todos={this.state.todos} markComplete={this.markComplete} delTodo={this.delTodo}/>
+
+        </React.Fragment>
+      )} />
+
+      <Route path="/about" Component={About} />
+      
+      </div>
+      </div>
       </Router>
-    );
+     );
   }
 }
 
+ 
 export default App;
+
